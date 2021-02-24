@@ -41,15 +41,3 @@ final class Employee: Model, Content {
 struct EmployeeList: Content {
     var data: [Employee]
 }
-
-struct Response<T> : Content where T: Content {
-    var message: String?
-    var status: UInt?
-    var data: T?
-    
-    init(message: String, status: UInt, data: T) {
-        self.message = message
-        self.status = status
-        self.data = data
-    }
-}
