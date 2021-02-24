@@ -8,15 +8,23 @@ public func configure(_ app: Application) throws {
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
     app.databases.use(.postgres(
-        hostname: Environment.get("DATABASE_HOST") ?? "localhost",
-        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? PostgresConfiguration.ianaPortNumber,
-        username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
-        password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
-        database: Environment.get("DATABASE_NAME") ?? "vapor_database"
+        hostname: "2.tcp.ngrok.io",
+        port: 13756,
+        username: "postgres",
+        password: "admin",
+        database: "employees_api",
+        connectionPoolTimeout: .seconds(60)
     ), as: .psql)
 
-    app.migrations.add(CreateTodo())
+    app.migrations.add(CreateEmployee())
+    try app.autoMigrate().wait()
 
     // register routes
     try routes(app)
 }
+
+//        hostname: Environment.get("tcp://0.tcp.ngrok.io") ?? "localhost",
+//        port: Environment.get("13953").flatMap(Int.init(_:)) ?? PostgresConfiguration.ianaPortNumber,
+//        username: Environment.get("admin") ?? "vapor_username",
+//        password: Environment.get("admin") ?? "vapor_password",
+//        database: Environment.get("employees_api") ?? "vapor_database"
