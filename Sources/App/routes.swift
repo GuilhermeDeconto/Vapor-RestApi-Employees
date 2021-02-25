@@ -11,4 +11,5 @@ func routes(_ app: Application) throws {
     }
 
     try app.register(collection: EmployeeController())
+    app.routes.defaultMaxBodySize = "1mb"
 }

@@ -9,7 +9,7 @@ public func configure(_ app: Application) throws {
 
     app.databases.use(.postgres(
         hostname: "2.tcp.ngrok.io",
-        port: 13756,
+        port: 17893,
         username: "postgres",
         password: "admin",
         database: "employees_api",
@@ -18,6 +18,9 @@ public func configure(_ app: Application) throws {
 
     app.migrations.add(CreateEmployee())
     try app.autoMigrate().wait()
+    
+    app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+    app.middleware.use(MyMiddleware())
 
     // register routes
     try routes(app)

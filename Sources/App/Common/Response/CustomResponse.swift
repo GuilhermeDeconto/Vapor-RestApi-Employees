@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import Vapor
 
-struct Response<T> : Content where T: Content {
+struct CustomResponse<T> : Content where T: Content {
     var message: String?
     var status: UInt?
     var data: T?
