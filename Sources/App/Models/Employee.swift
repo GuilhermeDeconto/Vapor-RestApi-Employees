@@ -25,9 +25,12 @@ final class Employee: Model, Content {
     @Field(key: "title")
     var title: String
     
+    @Enum(key: "userType")
+    var userType: UserType
+    
     init() { }
     
-    init(id: UUID? = nil, title: String, firstName: String, lastName: String, department: String, salary: Double, age: Int) {
+    init(id: UUID? = nil, title: String, firstName: String, lastName: String, department: String, salary: Double, age: Int, userType: UserType = .standard) {
         self.id = id
         self.title = title
         self.firstName = firstName
@@ -35,6 +38,7 @@ final class Employee: Model, Content {
         self.department = department
         self.salary = salary
         self.age = age
+        self.userType = userType
     }
 }
 

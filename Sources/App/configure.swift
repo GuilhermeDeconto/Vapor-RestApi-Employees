@@ -9,7 +9,7 @@ public func configure(_ app: Application) throws {
 
     app.databases.use(.postgres(
         hostname: "2.tcp.ngrok.io",
-        port: 17893,
+        port: 17346,
         username: "postgres",
         password: "admin",
         database: "employees_api",

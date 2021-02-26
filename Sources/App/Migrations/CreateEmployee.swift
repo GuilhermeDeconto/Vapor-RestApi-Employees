@@ -10,6 +10,7 @@ struct CreateEmployee: Migration {
             .field("salary", .double, .required)
             .field("age", .int, .required)
             .field("department", .string, .required)
+            .field("userType", .string, .required)
             .create()
     }
 

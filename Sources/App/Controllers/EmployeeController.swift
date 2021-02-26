@@ -11,7 +11,9 @@ struct EmployeeController: RouteCollection {
             employee.delete(use: delete)
             employee.post(use: createEmployee)
             employee.get(use: getById)
-            
+        }
+        employee.group("search") { employee in
+            employee.get(use: getByParam)
         }
     }
     
@@ -52,6 +54,27 @@ struct EmployeeController: RouteCollection {
     func deleteBach(req: Request) throws -> EventLoopFuture<String> {
         let employees = try req.content.decode(EmployeeList.self)
         return Employee.query(on: req.db).filter(\._$id ~~ employees.data.map{ $0.id ?? UUID() }).delete().transform(to: ResponseWrapper(protocolCode: .success, data: employees.data).makeResponse() ).unwrap(orError: Abort(.badRequest))
+    }
+    
+    func getByParam(req: Request) throws -> EventLoopFuture<String> {
+        let employeeType = try req.query.get(at: "employeeType") as UserType.RawValue?
+        let employeeName = try req.query.get(at: "firstName") as String?
+        
+        if (employeeType != nil && employeeName != nil) {
+            
+            return Employee.query(on: req.db).group(.and){ group in
+                group.filter(\.$firstName, .custom("ilike"), employeeName).filter("userType", .equal, employeeType)
+            }.all().map{ employee in ResponseWrapper(protocolCode: .success, data: employee).makeResponse() }
+            
+        }else if (employeeName != nil || employeeType != nil) {
+            
+            return Employee.query(on: req.db).group(.or){ group in
+                group.filter(\.$firstName, .custom("ilike"), employeeName).filter("userType", .equal, employeeType)
+            }.all().map{ employee in ResponseWrapper(protocolCode: .success, data: employee).makeResponse() }
+            
+        }
+        
+        return ResponseWrapper<DefaultResponseObj>(protocolCode: .notFound).makeFutureResponse(req: req)
     }
     
 }
